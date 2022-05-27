@@ -1,15 +1,22 @@
 import { useEffect, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import BarChart from "./BarChart";
+import BubblePlot from "./BubblePlot";
 
 function MovieList () {
     const [movies,setMovies] = useState([]);
+    const [country,setCountry] = useState([]);
     const [selected,setSelected] = useState({});
     const userLang = navigator.language || navigator.userLanguage;
     const url = userLang.includes("es")?
         "https://gist.githubusercontent.com/josejbocanegra/f784b189117d214578ac2358eb0a01d7/raw/2b22960c3f203bdf4fac44cc7e3849689218b8c0/data-es.json"
         :"https://gist.githubusercontent.com/josejbocanegra/8b436480129d2cb8d81196050d485c56/raw/48cc65480675bf8b144d89ecb8bcd663b05e1db0/data-en.json";
 
+    useEffect(()=>{
+        fetch("https://gist.githubusercontent.com/josejbocanegra/000e838b77c6ec8e5d5792229c1cdbd0/raw/83cd9161e28e308ef8c5363e217bad2b6166f21a/countries.json")
+        .then(res=>res.json())
+        .then(res=>setCountry(res));
+    });
     useEffect(()=>{
         if (navigator.onLine) {
             fetch(url)
@@ -78,6 +85,9 @@ function MovieList () {
                 </div>
                 <div className="row d-flex justify-content-center">
                     <BarChart data={movies} />
+                </div>
+                <div className="row d-flex justify-content-center">
+                    <BubblePlot data={country} />
                 </div>
             </main>
         </>
